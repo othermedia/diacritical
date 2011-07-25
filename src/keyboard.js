@@ -1,11 +1,11 @@
 Diacritical.Keyboard = function(language, textField, options) {
-    this._textField  = jQuery(textField);
+    this.textField  = jQuery(textField);
     this.language    = language;
     this.defaultCase = 'lower';
 };
 
 Diacritical.Keyboard.prototype.setCase = function(newCase) {
-    var oldCase = this._case, oldKeys, newKeys;
+    var oldCase = this.textCase, oldKeys, newKeys;
     
     if (!oldCase) {
         oldCase = newCase == 'lower' ? 'upper' : 'lower';
@@ -22,17 +22,17 @@ Diacritical.Keyboard.prototype.setCase = function(newCase) {
         button.style.display = '';
     });
     
-    this._case = newCase;
+    this.textCase = newCase;
 };
 
 Diacritical.Keyboard.prototype.insert = function(character) {
-    var field     = this._textField[0],
-        value     = this._textField.val(),
+    var field     = this.textField[0],
+        value     = this.textField.val(),
         selection = this.constructor.getSelection(field),
         fore      = value.substring(0, selection.start),
         aft       = value.substring(selection.end, value.length);
     
-    this._textField.val(fore + character + aft);
+    this.textField.val(fore + character + aft);
     this.constructor.setSelection(field, selection.start + 1, selection.start + 1);
 };
 
@@ -67,7 +67,7 @@ Diacritical.Keyboard.prototype.getHTML = function() {
     jQuery(this._toggle).bind('click', function(evnt) {
         evnt.preventDefault();
         
-        self.setCase(self._case == 'lower' ? 'upper' : 'lower');
+        self.setCase(self.textCase == 'lower' ? 'upper' : 'lower');
     });
     
     jQuery.map(this.upperKeys.concat(this.lowerKeys), function(button) {
