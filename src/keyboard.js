@@ -1,8 +1,7 @@
 Diacritical.Keyboard = function(language, textField, options) {
-    this._textField      = jQuery(textField);
-    this._insertionPoint = this.getInsertionPoint();
-    this.language        = language;
-    this.defaultCase     = 'lower';
+    this._textField  = jQuery(textField);
+    this.language    = language;
+    this.defaultCase = 'lower';
 };
 
 Diacritical.Keyboard.prototype.setCase = function(newCase) {
@@ -27,22 +26,20 @@ Diacritical.Keyboard.prototype.setCase = function(newCase) {
 };
 
 Diacritical.Keyboard.prototype.insert = function(character) {
-    var caret = this.getInsertionPoint(),
-        value = this._textField.val(),
-        fore  = value.substring(0, caret),
-        aft   = value.substring(caret, value.length);
+    var field     = this._textField[0],
+        value     = this._textField.val(),
+        selection = this.constructor.getSelection(field),
+        fore      = value.substring(0, selection.start),
+        aft       = value.substring(selection.end, value.length);
     
     this._textField.val(fore + character + aft);
-};
-
-Diacritical.Keyboard.prototype.getInsertionPoint = function() {
-    return this._textField.val().length;
+    this.constructor.setSelection(field, selection.start + 1, selection.start + 1);
 };
 
 Diacritical.Keyboard.prototype.getHTML = function() {
     if (this._html) return this._html;
     
-    var self = this, createButton, insertButton;
+    var self = this, createButton;
     
     this._html    = document.createElement('div');
     this._toggle  = document.createElement('button');
@@ -64,10 +61,6 @@ Diacritical.Keyboard.prototype.getHTML = function() {
         return ctrl;
     };
     
-    insertButton = function(button) {
-        self._html.appendChild(button);
-    };
-    
     this.upperKeys = jQuery.map(this.language.Uppercase, createButton);
     this.lowerKeys = jQuery.map(this.language.Lowercase, createButton);
     
@@ -77,8 +70,9 @@ Diacritical.Keyboard.prototype.getHTML = function() {
         self.setCase(self._case == 'lower' ? 'upper' : 'lower');
     });
     
-    jQuery.map(this.upperKeys, insertButton);
-    jQuery.map(this.lowerKeys, insertButton);
+    jQuery.map(this.upperKeys.concat(this.lowerKeys), function(button) {
+        self._html.appendChild(button);
+    });
     
     this._html.appendChild(this._toggle);
     
@@ -93,4 +87,20 @@ Diacritical.Keyboard.prototype.hide = function() {
 
 Diacritical.Keyboard.prototype.show = function() {
     jQuery(this._html).show();
+};
+
+Diacritical.Keyboard.getSelection = function(el) {
+    var start = el.selectionStart,
+        end   = el.selectionEnd;
+    
+    if (typeof start != 'number' || typeof end != 'number') {
+        start = end = el.value.length;
+    }
+    
+    return {start: start, end: end};
+};
+
+Diacritical.Keyboard.setSelection = function(el, start, end) {
+    el.selectionStart = start;
+    el.selectionEnd   = end;
 };
