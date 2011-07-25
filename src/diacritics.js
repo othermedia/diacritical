@@ -1,9 +1,4 @@
 Diacritical.Languages = {
-    English: {
-        Uppercase: [],
-        Lowercase: []
-    },
-    
     French: {
         Uppercase: [
             '\u00C0', // À
