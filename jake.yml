@@ -1,0 +1,26 @@
+---
+source_directory: src
+build_directory:  build
+layout:           together
+
+builds:
+  src:
+    suffix:       false
+    packer:       false
+  min:
+    shrink_vars:  true
+    private:      true
+
+packages:
+  diacritical:
+    files:
+      - main
+      - diacritics
+      - keyboard
+    meta:
+      requires:
+        - jQuery
+      provides:
+        - Diacritical
+        - Diacritical.Languages
+        - Diacritical.Keyboard

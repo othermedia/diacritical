@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html><head>
+    <title>Diacritic entry tool tests</title>
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/diacritical-min.js"></script>
+</head><body>
+    <form method="get" action="" id="search-form"><div>
+        <input id="search" name="search" value="" type="text">
+        <input value="Search" type="submit">
+    </div></form>
+    
+    <script type="text/javascript">
+        (function() {
+            var language = Diacritical.Languages.French,
+                keyboard = new Diacritical.Keyboard(language, '#search'),
+                link     = $('<a href="">Enter diacritics</a>'),
+                form     = $('#search-form'),
+                kbhtml   = $(keyboard.getHTML());
+            
+            form.after(kbhtml);
+        })();
+    </script>
+<body></html>
